@@ -2,7 +2,7 @@ from typing import Any, Dict, List, Tuple, Type, TypeVar
 
 from .base_handler import BasicHandler, ClassHandler, StructHandler
 from .const import BASIC_TYPES, NoneType, pseudo_classes
-from .petit_ts import TypeStruct
+from .petit_type_system import TypeStruct
 from .utils import store_hash_function
 
 
