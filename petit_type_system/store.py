@@ -1,4 +1,4 @@
-from typing import Any, Dict, List, Tuple, Type, TypeVar
+from typing import Any, Callable, Dict, List, Tuple, Type, TypeVar
 
 from .base_handler import BasicHandler, ClassHandler, StructHandler
 from .const import BASIC_TYPES, NoneType, pseudo_classes
@@ -62,14 +62,14 @@ class TypeStore:
         """Adds a type to the store in order to build it's representation in function of the others
         """
         if store_hash_function(cls) not in self.types:  # check if already built
-            self.types[store_hash_function(cls)] = TypeStruct(
+            t = TypeStruct(
                 cls,
                 self,
                 self.export_all or exported,
                 is_mapping_key=is_mapping_key,
                 raise_on_error=self.raise_on_error,
             )
-
+            self.types[store_hash_function(cls)] = t
     def render_types(self) -> None:
         """Use this to render actual store, not actually required, 
         because get_repr() will render if required

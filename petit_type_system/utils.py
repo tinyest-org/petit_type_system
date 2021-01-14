@@ -55,8 +55,5 @@ def is_generic(cls: type) -> Tuple[bool, Set[TypeVar]]:
     return len(fields) > 0, fields
 
 
-def store_hash_function(cls: Any) -> str:
-    base_name = str(cls)
-    if (extended_name := get_extended_name(cls)) is not None:
-        base_name = f'{extended_name}_{base_name}'
-    return base_name
+def store_hash_function(cls: Any) -> int:
+    return id(cls)

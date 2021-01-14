@@ -10,7 +10,6 @@ T = TypeVar('T')
 
 
 class BaseHandler(ABC, Generic[T]):
-
     @abstractstaticmethod
     def should_handle(cls: Any, store: TypeStore,
                       origin: Optional[type], args: List[Any]) -> bool:
@@ -46,5 +45,5 @@ class StructHandler(ABC):
         ...
 
     @abstractstaticmethod
-    def make_struct(cls: Any, name:str, fields: Dict[str, Any], store: TypeStore) -> str:
-        pass
+    def make_struct(cls: Any, name: str, fields: Dict[str, Any], store: TypeStore) -> str:
+        ...

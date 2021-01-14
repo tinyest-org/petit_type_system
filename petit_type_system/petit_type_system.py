@@ -48,7 +48,8 @@ class TypeStruct:
         if self.rendering:
             return
         self.rendering = True
-
+        if self.rendered:
+            return
         origin = get_origin(self.value)
         args = get_args(self.value)
 
@@ -63,8 +64,12 @@ class TypeStruct:
                         self.__repr = result
                     else:
                         if name is None:
-                            self.__repr = self.store.struct_handler.make_inline_struct(
-                                self.value, result, self.store
+                            self.__repr = (
+                                self.store
+                                .struct_handler
+                                .make_inline_struct(
+                                    self.value, result, self.store
+                                )
                             )
                         else:
                             self.name = name

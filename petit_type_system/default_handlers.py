@@ -25,7 +25,6 @@ class LiteralHandler(BasicHandler):
 
 
 class EnumHandler(ClassHandler[Enum]):
-
     @staticmethod
     def should_handle(cls: type, store: TypeStore, origin, args) -> bool:
         return issubclass(cls, Enum)
