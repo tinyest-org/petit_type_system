@@ -46,9 +46,8 @@ class StructHandler(ABC):
     def __init__(self, store: TypeStore, **options):
         self.store = store
 
-    @abstractmethod
     def make_inline_struct(self, cls: Any, fields: Dict[str, Any]) -> str:
-        ...
+        raise NotImplementedError('The transcripter does not support inline types')
 
     @abstractmethod
     def make_struct(self, cls: Any, name: str, fields: Dict[str, Any]) -> str:
