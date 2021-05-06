@@ -55,10 +55,10 @@ class TypeStruct:
 
         if inspect.isclass(self.value):
             for handler in self.store.class_handlers:
-                if handler.should_handle(self.value, self.store, origin, args):
+                if handler.should_handle(self.value, origin, args):
 
                     name, result = handler.build(
-                        self.value, self.store, origin, args, self.is_mapping_key
+                        self.value, origin, args, self.is_mapping_key
                     )
                     if not handler.is_mapping():
                         self.__repr = result
@@ -68,7 +68,7 @@ class TypeStruct:
                                 self.store
                                 .struct_handler
                                 .make_inline_struct(
-                                    self.value, result, self.store
+                                    self.value, result,
                                 )
                             )
                         else:
@@ -77,7 +77,7 @@ class TypeStruct:
                                 self.store
                                 .struct_handler
                                 .make_struct(
-                                    self.value, name, result, self.store
+                                    self.value, name, result,
                                 )
                             )
                     # we have the check twice, because if you are not a
@@ -92,9 +92,9 @@ class TypeStruct:
                 raise MissingHandler(f'Type not Supported {self.value}')
         else:
             for handler in self.store.basic_handlers:
-                if handler.should_handle(self.value, self.store, origin, args):
+                if handler.should_handle(self.value, origin, args):
                     name, result = handler.build(
-                        self.value, self.store, origin, args, self.is_mapping_key
+                        self.value, origin, args, self.is_mapping_key
                     )
                     self.__repr = result
                     if name is not None:

@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from abc import ABC, abstractstaticmethod
+from abc import ABC, abstractmethod, abstractstaticmethod
 from typing import Generic, TYPE_CHECKING, Any, Dict, List, Optional, Tuple, TypeVar, Union
 
 if TYPE_CHECKING:
@@ -10,40 +10,46 @@ T = TypeVar('T')
 
 
 class BaseHandler(ABC, Generic[T]):
-    @abstractstaticmethod
-    def should_handle(cls: Any, store: TypeStore,
+    def __init__(self, store: TypeStore, **options):
+        self.store = store
+
+    @abstractmethod
+    def should_handle(self, cls: Any,
                       origin: Optional[type], args: List[Any]) -> bool:
         ...
 
-    @abstractstaticmethod
-    def build(cls: T, store: TypeStore, origin: Optional[type],
+    @abstractmethod
+    def build(self, cls: T, origin: Optional[type],
               args: List[Any], is_mapping_key: bool) -> Tuple[Optional[str], Union[str, Dict[str, Any]]]:
         ...
 
 
 class BasicHandler(BaseHandler[T]):
-    @abstractstaticmethod
-    def build(cls: T, store: TypeStore, origin: Optional[type],
+    @abstractmethod
+    def build(self, cls: T, origin: Optional[type],
               args: List[Any], is_mapping_key: bool) -> Tuple[Optional[str], str]:
         ...
 
 
 class ClassHandler(BaseHandler[T]):
-    @abstractstaticmethod
-    def is_mapping() -> bool:
+    @abstractmethod
+    def is_mapping(self) -> bool:
         ...
 
-    @abstractstaticmethod
-    def build(cls: T, store: TypeStore, origin: Optional[type],
+    @abstractmethod
+    def build(self, cls: T, origin: Optional[type],
               args: List[Any], is_mapping_key: bool) -> Tuple[Optional[str], Union[str, Dict[str, Any]]]:
         ...
 
 
 class StructHandler(ABC):
-    @abstractstaticmethod
-    def make_inline_struct(cls: Any, fields: Dict[str, Any], store: TypeStore) -> str:
+    def __init__(self, store: TypeStore, **options):
+        self.store = store
+
+    @abstractmethod
+    def make_inline_struct(self, cls: Any, fields: Dict[str, Any]) -> str:
         ...
 
-    @abstractstaticmethod
-    def make_struct(cls: Any, name: str, fields: Dict[str, Any], store: TypeStore) -> str:
+    @abstractmethod
+    def make_struct(self, cls: Any, name: str, fields: Dict[str, Any]) -> str:
         ...

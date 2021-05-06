@@ -34,13 +34,14 @@ class TypeStore:
         self.export_all = export_all
         self.raise_on_error = raise_on_error
         self.class_handlers: List[Type[ClassHandler]] = [
-            *self._class_handlers]
+            c(self) for c in self._class_handlers]
         self.basic_handlers: List[Type[BasicHandler]] = [
-            *self._basic_handlers]
+            c(self) for c in self._basic_handlers]
         self.types: Dict[str, TypeStruct] = {
             store_hash_function(key): TypeStruct(value, self, False, default=True)
             for key, value in self._basic_types
         }
+        self._struct_handler_ = self._struct_handler(self)
 
     @property
     def export_token(self) -> str:
@@ -52,7 +53,7 @@ class TypeStore:
 
     @property
     def struct_handler(self) -> StructHandler:
-        return self._struct_handler
+        return self._struct_handler_
 
     @struct_handler.setter
     def struct_handler(self) -> None:
@@ -107,17 +108,17 @@ class TypeStore:
             i.get_full_repr(exported=export_all) for i in self.types.values() if i.name is not None
         )
 
-    def add_basic_handler(self, handler: Type[BasicHandler]) -> None:
+    def add_basic_handler(self, handler: Type[BasicHandler], **options) -> None:
         """Adds a `BasicHandler` to the store, in order to add support for a custom class
 
         if you want to add the support for datetime for example, it's here
         """
-        self.basic_handlers.append(handler)
+        self.basic_handlers.append(handler(self, **options))
 
-    def add_class_handler(self, handler: Type[ClassHandler]) -> None:
+    def add_class_handler(self, handler: Type[ClassHandler], **options) -> None:
         """Adds a `ClassHandler` to the store, in order to add support for a custom class
         """
-        self.class_handlers.append(handler)
+        self.class_handlers.append(handler(self, **options))
 
     def add_basic_cast(self, type1: Any, type2: BASIC_TYPES) -> None:
         """For example if you want to cast datetime.datetime directly as str

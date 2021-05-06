@@ -6,7 +6,7 @@ import unittest
 
 
 if __name__ == '__main__':
-    test_suite = unittest.defaultTestLoader.discover('./petit_ts/tests', 'test_*.py', '.')
+    test_suite = unittest.defaultTestLoader.discover('./petit_type_system/tests', 'test_*.py', '.')
     test_runner = unittest.TextTestRunner(resultclass=unittest.TextTestResult)
     result = test_runner.run(test_suite)
     sys.exit(not result.wasSuccessful())
