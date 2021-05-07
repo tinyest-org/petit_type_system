@@ -136,7 +136,7 @@ class TypeStore:
         self.types[store_hash_function(
             type1)] = self.types[store_hash_function(type2)]
 
-TypeStoreType = TypeVar('TypeStoreType', TypeStore)
+TypeStoreType = TypeVar('TypeStoreType', bound=TypeStore)
 
 def create_store_class(
     export_token: str,
