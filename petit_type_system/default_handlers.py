@@ -15,12 +15,12 @@ class UnionHandler(BasicHandler[Any, TypeStoreType]):
         return origin in (NamedUnion, Union)
 
 
-class LiteralHandler(BasicHandler[Literal, TypeStoreType]):
+class LiteralHandler(BasicHandler[Any, TypeStoreType]):
     def should_handle(self, cls, origin, args) -> bool:
         return origin in (Literal, NamedLiteral)
 
 
-class EnumHandler(ClassHandler[Enum, TypeStoreType]):
+class EnumHandler(ClassHandler[Any, TypeStoreType]):
     def should_handle(self, cls: type, origin, args) -> bool:
         return issubclass(cls, Enum)
 
@@ -38,11 +38,11 @@ class TupleHandler(BasicHandler[Any, TypeStoreType]):
         return origin is tuple
 
 
-class ArrayHandler(BasicHandler[List, TypeStoreType]):
+class ArrayHandler(BasicHandler[Any, TypeStoreType]):
     def should_handle(self, cls: Any, origin: Optional[type], args: List[Any]) -> bool:
         return origin == list and len(args) == 1
 
 
-class MappingHandler(BasicHandler[Dict, TypeStoreType]):
+class MappingHandler(BasicHandler[Any, TypeStoreType]):
     def should_handle(self, cls: Any, origin: Optional[type], args: List[Any]) -> bool:
         return origin == dict and len(args) == 2

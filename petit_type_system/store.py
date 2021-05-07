@@ -1,6 +1,7 @@
-from functools import cached_property
-from typing import Any, Dict, List, TYPE_CHECKING, Tuple, Type, TypeVar
+from __future__ import annotations
 
+from functools import cached_property
+from typing import TYPE_CHECKING, Any, Dict, List, Tuple, Type, TypeVar
 
 from .const import BASIC_TYPES, pseudo_classes
 from .petit_type_system import TypeStruct
@@ -136,7 +137,9 @@ class TypeStore:
         self.types[store_hash_function(
             type1)] = self.types[store_hash_function(type2)]
 
+
 TypeStoreType = TypeVar('TypeStoreType', bound=TypeStore)
+
 
 def create_store_class(
     export_token: str,
