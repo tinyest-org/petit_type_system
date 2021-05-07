@@ -1,14 +1,13 @@
 from __future__ import annotations
 
+from abc import ABC, abstractmethod
 from functools import cached_property
-from typing import TYPE_CHECKING, Any, Dict, List, Tuple, Type, TypeVar
+from typing import (Any, Dict, Generic, List, Optional, Tuple, Type, TypeVar,
+                    Union)
 
 from .const import BASIC_TYPES, pseudo_classes
 from .petit_type_system import TypeStruct
 from .utils import store_hash_function
-
-if TYPE_CHECKING:
-    from .base_handler import BasicHandler, ClassHandler, StructHandler
 
 
 class TypeStore:
@@ -148,3 +147,52 @@ def create_store_class(
         _struct_handler = struct_handler
 
     return Store
+
+
+T = TypeVar('T')
+
+
+class BaseHandler(ABC, Generic[T, TypeStoreType]):
+    def __init__(self, store: TypeStoreType, **options):
+        self.store = store
+
+    @abstractmethod
+    def should_handle(self, cls: Any,
+                      origin: Optional[type], args: List[Any]) -> bool:
+        ...
+
+    @abstractmethod
+    def build(self, cls: T, origin: Optional[type],
+              args: List[Any], is_mapping_key: bool) -> Tuple[Optional[str], Union[str, Dict[str, Any]]]:
+        ...
+
+
+class BasicHandler(BaseHandler[T, TypeStoreType]):
+    @abstractmethod
+    def build(self, cls: T, origin: Optional[type],
+              args: List[Any], is_mapping_key: bool) -> Tuple[Optional[str], str]:
+        ...
+
+
+class ClassHandler(BaseHandler[T, TypeStoreType]):
+    @abstractmethod
+    def is_mapping(self) -> bool:
+        ...
+
+    @abstractmethod
+    def build(self, cls: T, origin: Optional[type],
+              args: List[Any], is_mapping_key: bool) -> Tuple[Optional[str], Union[str, Dict[str, Any]]]:
+        ...
+
+
+class StructHandler(ABC, Generic[TypeStoreType]):
+    def __init__(self, store: TypeStoreType, **options):
+        self.store = store
+
+    def make_inline_struct(self, cls: Any, fields: Dict[str, Any]) -> str:
+        raise NotImplementedError(
+            'The transcripter does not support inline types')
+
+    @abstractmethod
+    def make_struct(self, cls: Any, name: str, fields: Dict[str, Any]) -> str:
+        ...

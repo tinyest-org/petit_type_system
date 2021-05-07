@@ -2,11 +2,10 @@ from __future__ import annotations
 
 from dataclasses import is_dataclass
 from enum import Enum
-from typing import (Dict, TYPE_CHECKING, Any, List, Literal, Optional,
-                    Union)
+from typing import Any, List, Literal, Optional, Union
 
-from .base_handler import BasicHandler, ClassHandler, TypeStoreType
 from .named_types import NamedLiteral, NamedUnion
+from .store import BasicHandler, ClassHandler, TypeStoreType
 
 
 # Union is not really a type
