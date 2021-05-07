@@ -1,4 +1,5 @@
-from typing import Any, Callable, Dict, List, Tuple, Type, TypeVar
+from functools import cached_property
+from typing import Any, Dict, List, Tuple, Type, TypeVar
 
 from .base_handler import BasicHandler, ClassHandler, StructHandler
 from .const import BASIC_TYPES, NoneType, pseudo_classes
@@ -7,17 +8,16 @@ from .utils import store_hash_function
 
 
 class TypeStore:
-    # TODO: update documentation to reflect changes
     """Required in order to link all the types between themselves
     Supports: 
     - `str`, `bool`, `int`, `float`, `Any`, `None` 
     - dict, list
     - Dict[K, V], L[T]
     - @dataclass and generic classes
-    - `pydantic.BaseModel`
+    - `pydantic.BaseModel` if added with custom renderer
 
 
-    (nested types are automaticcaly recurvely added so no need to add in the correct order, 
+    (nested types are automatically recursively added so no need to add in the correct order, 
     generic classes are automaticcally added, if used once), 
 
     After adding all different wanted types :
@@ -34,30 +34,24 @@ class TypeStore:
         self.export_all = export_all
         self.raise_on_error = raise_on_error
         self.class_handlers: List[Type[ClassHandler]] = [
-            c(self) for c in self._class_handlers]
+            c(self) for c in self._class_handlers
+        ]
         self.basic_handlers: List[Type[BasicHandler]] = [
-            c(self) for c in self._basic_handlers]
+            c(self) for c in self._basic_handlers
+        ]
         self.types: Dict[str, TypeStruct] = {
             store_hash_function(key): TypeStruct(value, self, False, default=True)
             for key, value in self._basic_types
         }
         self._struct_handler_ = self._struct_handler(self)
 
-    @property
+    @cached_property
     def export_token(self) -> str:
         return self._export_token
 
-    @export_token.setter
-    def export_token(self) -> None:
-        raise Exception('ReadOnly property')
-
-    @property
+    @cached_property
     def struct_handler(self) -> StructHandler:
         return self._struct_handler_
-
-    @struct_handler.setter
-    def struct_handler(self) -> None:
-        raise Exception('ReadOnly property')
 
     def add_type(self, cls: pseudo_classes, exported: bool = False, is_mapping_key: bool = False) -> None:
         """Adds a type to the store in order to build it's representation in function of the others
@@ -71,6 +65,7 @@ class TypeStore:
                 raise_on_error=self.raise_on_error,
             )
             self.types[store_hash_function(cls)] = t
+
     def render_types(self) -> None:
         """Use this to render actual store, not actually required, 
         because get_repr() will render if required
@@ -113,12 +108,22 @@ class TypeStore:
 
         if you want to add the support for datetime for example, it's here
         """
-        self.basic_handlers.append(handler(self, **options))
+        if issubclass(handler, BasicHandler):
+            self.basic_handlers.append(handler(self, **options))
+        else:
+            TypeError(
+                f'handler should be of {type(BasicHandler)} and got {type(handler)}'
+            )
 
     def add_class_handler(self, handler: Type[ClassHandler], **options) -> None:
         """Adds a `ClassHandler` to the store, in order to add support for a custom class
         """
-        self.class_handlers.append(handler(self, **options))
+        if issubclass(handler, ClassHandler):
+            self.class_handlers.append(handler(self, **options))
+        else:
+            TypeError(
+                f'handler should be of {type(ClassHandler)} and got {type(handler)}'
+            )
 
     def add_basic_cast(self, type1: Any, type2: BASIC_TYPES) -> None:
         """For example if you want to cast datetime.datetime directly as str

@@ -7,10 +7,10 @@ if TYPE_CHECKING:
     from .store import TypeStore  # pragma: no cover
 
 T = TypeVar('T')
+TypeStoreType = TypeVar('TypeStoreType', TypeStore)
 
-
-class BaseHandler(ABC, Generic[T]):
-    def __init__(self, store: TypeStore, **options):
+class BaseHandler(ABC, Generic[T, TypeStoreType]):
+    def __init__(self, store: TypeStoreType, **options):
         self.store = store
 
     @abstractmethod
@@ -24,14 +24,14 @@ class BaseHandler(ABC, Generic[T]):
         ...
 
 
-class BasicHandler(BaseHandler[T]):
+class BasicHandler(BaseHandler[T, TypeStoreType]):
     @abstractmethod
     def build(self, cls: T, origin: Optional[type],
               args: List[Any], is_mapping_key: bool) -> Tuple[Optional[str], str]:
         ...
 
 
-class ClassHandler(BaseHandler[T]):
+class ClassHandler(BaseHandler[T, TypeStoreType]):
     @abstractmethod
     def is_mapping(self) -> bool:
         ...
@@ -42,8 +42,8 @@ class ClassHandler(BaseHandler[T]):
         ...
 
 
-class StructHandler(ABC):
-    def __init__(self, store: TypeStore, **options):
+class StructHandler(ABC, Generic[T, TypeStoreType]):
+    def __init__(self, store: TypeStore[T], **options):
         self.store = store
 
     def make_inline_struct(self, cls: Any, fields: Dict[str, Any]) -> str:
