@@ -112,22 +112,13 @@ class TypeStore:
 
         if you want to add the support for datetime for example, it's here
         """
-        if issubclass(handler, BasicHandler):
-            self.basic_handlers.append(handler(self, **options))
-        else:
-            TypeError(
-                f'handler should be of {type(BasicHandler)} and got {type(handler)}'
-            )
+
+        self.basic_handlers.append(handler(self, **options))
 
     def add_class_handler(self, handler: Type[ClassHandler], **options) -> None:
         """Adds a `ClassHandler` to the store, in order to add support for a custom class
         """
-        if issubclass(handler, ClassHandler):
-            self.class_handlers.append(handler(self, **options))
-        else:
-            TypeError(
-                f'handler should be of {type(ClassHandler)} and got {type(handler)}'
-            )
+        self.class_handlers.append(handler(self, **options))
 
     def add_basic_cast(self, type1: Any, type2: BASIC_TYPES) -> None:
         """For example if you want to cast datetime.datetime directly as str
