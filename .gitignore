@@ -7,3 +7,6 @@
 htmlcov
 t.ts
 coverage.xml
+build 
+dist
+petit_type_system.egg-info
