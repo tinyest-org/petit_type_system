@@ -1,10 +1,13 @@
 from functools import cached_property
-from typing import Any, Dict, List, Tuple, Type, TypeVar
+from typing import Any, Dict, List, TYPE_CHECKING, Tuple, Type, TypeVar
 
-from .base_handler import BasicHandler, ClassHandler, StructHandler
-from .const import BASIC_TYPES, NoneType, pseudo_classes
+
+from .const import BASIC_TYPES, pseudo_classes
 from .petit_type_system import TypeStruct
 from .utils import store_hash_function
+
+if TYPE_CHECKING:
+    from .base_handler import BasicHandler, ClassHandler, StructHandler
 
 
 class TypeStore:
@@ -133,6 +136,7 @@ class TypeStore:
         self.types[store_hash_function(
             type1)] = self.types[store_hash_function(type2)]
 
+TypeStoreType = TypeVar('TypeStoreType', TypeStore)
 
 def create_store_class(
     export_token: str,

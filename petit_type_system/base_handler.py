@@ -1,13 +1,15 @@
 from __future__ import annotations
 
-from abc import ABC, abstractmethod, abstractstaticmethod
-from typing import Generic, TYPE_CHECKING, Any, Dict, List, Optional, Tuple, TypeVar, Union
+from abc import ABC, abstractmethod
+from typing import (Any, Dict, Generic, List, Optional, Tuple,
+                    TypeVar, Union)
 
-if TYPE_CHECKING:
-    from .store import TypeStore  # pragma: no cover
+from .store import TypeStoreType
+
+
 
 T = TypeVar('T')
-TypeStoreType = TypeVar('TypeStoreType', TypeStore)
+
 
 class BaseHandler(ABC, Generic[T, TypeStoreType]):
     def __init__(self, store: TypeStoreType, **options):
@@ -42,12 +44,13 @@ class ClassHandler(BaseHandler[T, TypeStoreType]):
         ...
 
 
-class StructHandler(ABC, Generic[T, TypeStoreType]):
-    def __init__(self, store: TypeStore[T], **options):
+class StructHandler(ABC, Generic[TypeStoreType]):
+    def __init__(self, store: TypeStoreType, **options):
         self.store = store
 
     def make_inline_struct(self, cls: Any, fields: Dict[str, Any]) -> str:
-        raise NotImplementedError('The transcripter does not support inline types')
+        raise NotImplementedError(
+            'The transcripter does not support inline types')
 
     @abstractmethod
     def make_struct(self, cls: Any, name: str, fields: Dict[str, Any]) -> str:
