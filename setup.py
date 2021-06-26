@@ -5,7 +5,7 @@ with open('readme.md', 'r') as f :
 
 setup(
     name='petit_type_system',
-    version='0.2.0',
+    version='0.2.1',
     description='Backend to handle type conversion from python to another language',
     packages=['petit_type_system'],
     url='https://github.com/Plawn/petit_type_system',

@@ -3,9 +3,11 @@ import threading
 from typing import (Any, Set, Tuple, TypeVar, Union, get_args, get_origin,
                     get_type_hints)
 
-from .const import NoneType, pseudo_classes
+from .const import NoneType, pseudo_classes, INLINE_TOKEN
 from .named_types import NamedUnion, get_extended_name
 
+def is_inline(cls: type):
+    return cls.__name__.startswith(INLINE_TOKEN)
 
 class SafeCounter:
     def __init__(self, value: int = 0):
