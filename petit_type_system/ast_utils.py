@@ -1,6 +1,11 @@
+"""
+This contains the function used to automatically detect the name of assignements using ast parsing features
+"""
+
 import ast
 import inspect
-from typing import Any, Optional, Union, get_origin
+from typing import Optional
+
 import executing
 
 

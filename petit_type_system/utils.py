@@ -4,7 +4,7 @@ from typing import (Any, Set, Tuple, TypeVar, Union, get_args, get_origin,
                     get_type_hints)
 
 from .const import NoneType, pseudo_classes, INLINE_TOKEN
-from .named_types import NamedUnion, get_extended_name
+from .named_types import NamedUnion
 
 def is_inline(cls: type):
     return cls.__name__.startswith(INLINE_TOKEN)

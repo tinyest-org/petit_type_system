@@ -1,4 +1,8 @@
-from typing import Any, Final, List, Union, Tuple
+"""
+Special added types
+"""
+
+from typing import Any, Final, Union
 
 INLINE_TOKEN: Final = "__inline__"
 

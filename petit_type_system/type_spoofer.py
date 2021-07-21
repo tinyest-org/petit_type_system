@@ -4,12 +4,14 @@ from typing import Any, Callable, List, Tuple, Union
 from .named_types import NamedUnion
 
 
-def spoofer(spoofed: List[Tuple[Any, Any]]) -> Callable[[], None]:
+def spoofer(spoofed: List[Tuple[Any, Any]], warning:bool=True) -> Callable[[], None]:
     """Will return a function that will **replace** and **patch** the original function `get_origin` from
     the `typing` library.
 
     Warning, it could cause bug and side effects
     """
+    if warning:
+        print('A spoofer is used in this project, it could cause bugs')
     def f() -> None:
         # this functions is copied/pasted from the typing library
         # it's also modified for spoofing types

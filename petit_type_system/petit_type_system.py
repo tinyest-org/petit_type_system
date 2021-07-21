@@ -1,12 +1,10 @@
 from __future__ import annotations
 
 import inspect
-from typing import (TYPE_CHECKING, Any, Dict, List, Optional, get_args,
-                    get_origin)
+from typing import TYPE_CHECKING, Optional, get_args, get_origin
 
 from .const import pseudo_classes
 from .exceptions import MissingHandler
-from .utils import is_generic, is_optional
 
 if TYPE_CHECKING:
     from .store import TypeStore  # pragma: no cover

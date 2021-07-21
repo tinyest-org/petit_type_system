@@ -1,6 +1,7 @@
-from .utils import SafeCounter
-from .const import INLINE_TOKEN
 from dataclasses import make_dataclass
+
+from .const import INLINE_TOKEN
+from .utils import SafeCounter
 
 # we use this to create different names for the inlined types
 """Be careful with this, it's a global for the library
@@ -8,7 +9,7 @@ from dataclasses import make_dataclass
 global_counter = SafeCounter()
 
 
-def Type(**kwargs) -> type:
+def Struct(**kwargs) -> type:
     """Creates a dataclass in order to make an inline type
 
     example: Type(username=str, password=str) -> 

@@ -1,4 +1,4 @@
-from typing import (Any, Callable, List, Optional, Tuple, TypeVar, Union,
+from typing import (Any, Optional, TypeVar, Union,
                     get_args, get_origin)
 
 from .ast_utils import get_variable_name

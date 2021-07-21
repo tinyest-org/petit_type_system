@@ -1,3 +1,10 @@
+"""
+Here we have the default handlers, they implement the emit, function of the abstract class but implement the should_handle
+
+This makes it easier to build on top of it for later, see the petit_ts projet
+"""
+
+
 from __future__ import annotations
 
 from dataclasses import is_dataclass
