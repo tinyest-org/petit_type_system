@@ -22,7 +22,7 @@ def Struct(**kwargs) -> type:
 
     It can be used like that :
     ```python
-    def handle_input(data: Type(username=str, password=str)) -> Type(error=bool):
+    def handle_input(data: Struct(username=str, password=str)) -> Struct(error=bool):
         return {'error':False}
     ```
     """
