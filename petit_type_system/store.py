@@ -4,6 +4,7 @@ from abc import ABC, abstractmethod
 from functools import cached_property
 from typing import (Any, Dict, Generic, List, Optional, Tuple, Type, TypeVar,
                     Union)
+from dataclasses import dataclass
 
 from .const import BASIC_TYPES, pseudo_classes
 from .petit_type_system import TypeStruct
@@ -32,6 +33,7 @@ class TypeStore:
     _basic_types: List[Tuple[Any, str]] = []
     _export_token: str = None
     _struct_handler: StructHandler = None
+    _function_handler: FunctionHandler = None
 
     def __init__(self, export_all: bool = False, raise_on_error: bool = False):
         self.export_all = export_all
@@ -70,7 +72,8 @@ class TypeStore:
             self.types[store_hash_function(cls)] = t
 
     def render_types(self) -> None:
-        """Use this to render actual store, not actually required, 
+        """
+        Use this to render actual store, not actually required, 
         because get_repr() will render if required
         """
         for type_ in list(self.types.values()):
@@ -120,9 +123,10 @@ class TypeStore:
         self.class_handlers.append(handler(self, **options))
 
     def add_basic_cast(self, type1: Any, type2: BASIC_TYPES) -> None:
-        """For example if you want to cast datetime.datetime directly as str
+        """
+        For example if you want to cast datetime.datetime directly as str
 
-        will only work for basic types | flat types
+        will only work for basic types | flat types
         """
         self.types[store_hash_function(
             type1)] = self.types[store_hash_function(type2)]
@@ -137,6 +141,7 @@ def create_store_class(
     struct_handler: StructHandler,
     basic_handlers: List[Type[BasicHandler]],
     class_handlers: List[Type[ClassHandler]],
+    function_handler: FunctionHandler,
 ) -> Type[TypeStore]:
 
     class Store(TypeStore):
@@ -151,6 +156,18 @@ def create_store_class(
 
 T = TypeVar('T')
 
+@dataclass
+class FunctionParams:
+    positional_params: List
+
+
+class FunctionHandler(ABC, Generic[T, TypeStoreType]):
+    def __init__(self, store: TypeStoreType, **options):
+        self.store = store
+
+    @abstractmethod
+    def build(self, func, name: str, params: FunctionParams, output_type: Any) -> str:
+        ...
 
 class BaseHandler(ABC, Generic[T, TypeStoreType]):
     def __init__(self, store: TypeStoreType, **options):

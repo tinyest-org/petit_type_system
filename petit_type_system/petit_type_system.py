@@ -88,6 +88,11 @@ class TypeStruct:
             # TODO: better handle error
             if self.raise_on_error:
                 raise MissingHandler(f'Type not Supported {self.value}')
+        elif inspect.isfunction(self.value):
+            func_name = self.value
+            params = None
+            output_type = None
+            self.__repr = self.store._function_handler.build(self.value, name, params, output_type)
         else:
             for handler in self.store.basic_handlers:
                 if handler.should_handle(self.value, origin, args):
